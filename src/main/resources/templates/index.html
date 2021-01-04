@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>WebSocket</title>
+    <script type="text/javascript" src="jquery-3.4.1.min.js"></script>
+</head>
+<body>
+<div id="welcome"></div>
+<hr/>
+<button onclick="openWebSocket()">开启WebSocket连接</button>&nbsp;&nbsp;
+<button onclick="closeWebSocket()">关闭WebSocket连接</button>
+<hr/>
+<label for="text">新消息: </label><input id="text" type="text"/>
+<button onclick="send()">发送消息</button>
+<hr/>
+<div id="message"></div>
+</body>
+<script type="text/javascript">
+    //随机id
+    let id = ("000" + Math.floor(Math.random() * 10000)).slice(-4);
+    //地址
+    const url = "ws://localhost:8080/websocket/" + id;
+
+    //初始化
+    $(function () {
+        document.getElementById('welcome').innerHTML = "Welcome to anonymous chatting room!&nbsp;&nbsp;[" + id + "]" + '<br/>';
+        openWebSocket();
+    });
+
+    let websocket = null;
+
+    //开启WebSocket
+    function openWebSocket() {
+        //判断当前浏览器是否支持WebSocket
+        if ('WebSocket' in window) {
+            websocket = new WebSocket(url);
+
+            //连接发生错误的回调方法
+            websocket.onerror = function () {
+                let date = new Date().format("yyyy-MM-dd hh:mm:ss");
+                setMessageInnerHTML(date);
+                setMessageInnerHTML("WebSocket连接发生错误");
+                setMessageInnerHTML("");
+            };
+
+            //连接成功建立的回调方法
+            websocket.onopen = function () {
+                let date = new Date().format("yyyy-MM-dd hh:mm:ss");
+                setMessageInnerHTML(date);
+                setMessageInnerHTML("WebSocket连接成功");
+                setMessageInnerHTML("");
+            };
+
+            //接收到消息的回调方法
+            websocket.onmessage = function (event) {
+                console.log(event);
+                let date = new Date().format("yyyy-MM-dd hh:mm:ss");
+                setMessageInnerHTML(date);
+                setMessageInnerHTML(event.data);
+                setMessageInnerHTML("");
+            };
+
+            //连接关闭的回调方法
+            websocket.onclose = function () {
+                let date = new Date().format("yyyy-MM-dd hh:mm:ss");
+                setMessageInnerHTML(date);
+                setMessageInnerHTML("WebSocket连接关闭");
+                setMessageInnerHTML("");
+            };
+        } else {
+            alert('当前浏览器不支持Websocket');
+        }
+    }
+
+    //将消息显示在网页上
+    function setMessageInnerHTML(innerHTML) {
+        document.getElementById('message').innerHTML += innerHTML + '<br/>';
+    }
+
+    //关闭WebSocket连接
+    function closeWebSocket() {
+        if (websocket != null) {
+            websocket.close();
+            websocket = null;
+        }
+    }
+
+    //发送消息
+    function send() {
+        if (websocket != null) {
+            let message = document.getElementById('text').value;
+            if (message) websocket.send(message);
+            document.getElementById('text').value = "";
+        }
+    }
+
+    //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+    window.onbeforeunload = function () {
+        closeWebSocket();
+    };
+
+    //日期格式化原型方法
+    Date.prototype.format = function (fmt) {
+        let o = {
+            "M+": this.getMonth() + 1,                  //月份
+            "d+": this.getDate(),                       //日
+            "h+": this.getHours(),                      //小时
+            "m+": this.getMinutes(),                    //分
+            "s+": this.getSeconds(),                    //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds()                 //毫秒
+        };
+        if (/(y+)/.test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        }
+        for (let k in o) {
+            if (new RegExp("(" + k + ")").test(fmt)) {
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            }
+        }
+        return fmt;
+    };
+</script>
+</html>
