@@ -19,8 +19,11 @@
 <script type="text/javascript">
     //随机id
     let id = ("000" + Math.floor(Math.random() * 10000)).slice(-4);
-    //地址
-    const url = "ws://localhost:8080/websocket/" + id;
+
+    //由相对地址转换为绝对地址
+    let addr = new URL("/websocket/" + id, window.location.href);
+    addr.protocol = addr.protocol.replace("http", "ws");
+    const url = addr.href;
 
     //初始化
     $(function () {
@@ -40,7 +43,7 @@
             websocket.onerror = function () {
                 let date = new Date().format("yyyy-MM-dd hh:mm:ss");
                 setMessageInnerHTML(date);
-                setMessageInnerHTML("WebSocket连接发生错误");
+                setMessageInnerHTML("WebSocket连接错误");
                 setMessageInnerHTML("");
             };
 
@@ -48,7 +51,7 @@
             websocket.onopen = function () {
                 let date = new Date().format("yyyy-MM-dd hh:mm:ss");
                 setMessageInnerHTML(date);
-                setMessageInnerHTML("WebSocket连接成功");
+                setMessageInnerHTML("WebSocket连接开启");
                 setMessageInnerHTML("");
             };
 
