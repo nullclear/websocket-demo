@@ -8,10 +8,10 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 @EnableWebSocket
 @SpringBootApplication
-public class WebsocketDemoApplication {
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(WebsocketDemoApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
     @Bean

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Hello WebSocket</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="jquery-3.4.1.min.js"></script>
+    <script src="app-websocket.js"></script>
+</head>
+<body>
+<div id="main-content" class="container" style="margin-top: 10px;">
+    <div class="row">
+        <form class="navbar-form">
+            <div class="form-group">
+                <label>WebSocket 连接：</label>
+                <button class="btn btn-primary" type="button" onclick="connect()">进行连接</button>
+                <button class="btn btn-danger" type="button" onclick="disconnect()">断开连接</button>
+            </div>
+            <div class="form-group">
+                <label for="subscribe">&nbsp;订阅地址：</label>
+                <input type="text" id="subscribe" class="form-control" placeholder="订阅地址">
+                <button class="btn btn-warning" onclick="subscribeMessage()" type="button">订阅</button>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <form class="navbar-form">
+            <div class="form-group">
+                <label for="destination">&nbsp;推送地址: </label>
+                <input type="text" id="destination" class="form-control" placeholder="推送地址">
+            </div>
+            <div class="form-group">
+                <label for="content">&nbsp;消息内容：</label>
+                <input type="text" id="content" class="form-control" placeholder="消息内容">
+                <button class="btn btn-info" onclick="sendMessage()" type="button">发送</button>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <h5 class="page-header" style="font-weight:bold">接收到的消息：</h5>
+        <table class="table table-striped">
+            <tbody id="information"></tbody>
+        </table>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    $(function () {
+        connect();
+        $("#destination").val(destination);
+        $("#subscribe").val(subscribe);
+    });
+</script>
+</html>
