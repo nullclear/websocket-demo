@@ -27,7 +27,7 @@ public class SystemController {
     public Map<String, Object> pushToWeb(@PathVariable(name = "sid", required = false) String sid) {
         String message = "[天气预报]: 今天天气晴";
         Map<String, Object> result = new HashMap<>();
-        WebSocketServer.sendInfo(message, sid);
+        WebSocketServer.sendInfo(sid, message);
         result.put("id", sid);
         result.put("msg", message);
         return result;
