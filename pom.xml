@@ -6,6 +6,7 @@
     <modules>
         <module>springboot-websocket-topic-example</module>
         <module>simple-example</module>
+        <module>springboot-websocket-queue-security-example</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -35,11 +36,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
