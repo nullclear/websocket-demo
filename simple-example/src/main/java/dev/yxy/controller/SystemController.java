@@ -21,7 +21,7 @@ public class SystemController {
         return "index";
     }
 
-    //推送数据接口
+    //推送数据接口，可以推送到一个存在的用户或者所有用户
     @ResponseBody
     @RequestMapping(value = {"/push/{sid}", "/push"})
     public Map<String, Object> pushToWeb(@PathVariable(name = "sid", required = false) String sid) {

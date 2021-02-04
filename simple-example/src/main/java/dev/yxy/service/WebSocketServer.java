@@ -1,5 +1,6 @@
 package dev.yxy.service;
 
+import org.apache.tomcat.websocket.WsSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 本质上类似一个观察者模式，每一个Session应该都是与前端建立连接的实例 {@link WsSession}
  * Created by Nuclear on 2021/1/4
  */
 @Service
@@ -23,6 +25,8 @@ public class WebSocketServer {
 
     /**
      * 连接建立成功调用的方法
+     * -----
+     * 将新用户加入Map，并发送成功消息
      */
     @OnOpen
     public void onOpen(@PathParam("sid") String sid, Session session) {
@@ -33,6 +37,8 @@ public class WebSocketServer {
 
     /**
      * 连接关闭调用的方法
+     * -----
+     * 将用户从Map中删除
      */
     @OnClose
     public void onClose(@PathParam("sid") String sid) {
@@ -42,6 +48,8 @@ public class WebSocketServer {
 
     /**
      * 收到客户端消息后调用的方法
+     * -----
+     * 群发消息
      */
     @OnMessage
     public void onMessage(@PathParam("sid") String sid, String message) {
@@ -71,7 +79,7 @@ public class WebSocketServer {
     }
 
     /**
-     * 群发自定义消息
+     * 服务端推送消息到个人或者全体用户
      */
     public static void sendInfo(String sid, String message) {
         if (sid == null) {
