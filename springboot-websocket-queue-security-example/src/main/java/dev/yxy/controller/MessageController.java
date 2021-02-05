@@ -33,23 +33,27 @@ public class MessageController {
     private SimpMessagingTemplate template;
 
     /**
+     * 这个方法有三个功能
+     * -----
+     * 抛出异常
+     * 群发消息
      * 点对点发送消息，将消息发送到指定用户
      */
     @MessageMapping("/test")
     public void sendMessageToUser(Principal principal, MessageBody messageBody) {
-        //推送地址为/error时，抛出测试异常
+        // todo 推送地址为/error时，抛出测试异常，见下面的方法 handleException(Exception e)
         if (Objects.equals(messageBody.getDestination(), "/error")) {
             throw new RuntimeException("测试异常处理方法");
         } else {
+            // 设置发送消息的用户
+            messageBody.setFrom(principal.getName());
             // 调用 STOMP 代理进行消息转发
             String targetUser = messageBody.getTargetUser();
             if (targetUser == null || targetUser.isBlank()) {
-                // 群发消息
+                // todo 群发消息
                 template.convertAndSend(messageBody.getDestination(), messageBody);
             } else {
-                // 设置发送消息的用户
-                messageBody.setFrom(principal.getName());
-                // 点对点发送
+                // todo 点对点发送
                 template.convertAndSendToUser(targetUser, messageBody.getDestination(), messageBody);
             }
         }
@@ -57,6 +61,8 @@ public class MessageController {
 
 
     /**
+     * 见js中的welcomeHandler()，初始化的时候已经订阅
+     * -----
      * 一次性响应
      * 服务端直接返回消息给客户端
      * 与Http模型不同，这种请求是异步的
@@ -67,6 +73,8 @@ public class MessageController {
     }
 
     /**
+     * 见js中的errorHandler()，初始化的时候已经订阅
+     * -----
      * 消息发生异常时的处理
      * 信息直接推送给消息发送者
      * 默认broadcast是true

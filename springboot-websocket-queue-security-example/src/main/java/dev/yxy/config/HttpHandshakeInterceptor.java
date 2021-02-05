@@ -1,5 +1,7 @@
 package dev.yxy.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -12,12 +14,15 @@ import java.util.Map;
 /**
  * WebSocket 握手请求拦截器，可用于拦截握手请求和响应，以及将 HTTP 属性传递到目标 WebSocketHandler，
  * 这里主要是设置握手时候，从 HTTP Session 中获取用户信息，传入 WebSocket 信息中。
+ * todo 这里只是模拟下参数传递，实际作用待考究
  * Created by Nuclear on 2021/1/6
  */
 public class HttpHandshakeInterceptor implements HandshakeInterceptor {
+    private static final Logger logger = LoggerFactory.getLogger(HttpHandshakeInterceptor.class);
 
     /**
      * 握手前拦截，从 HTTP 中参数传入 WebSocket Attributes 方便后续取出相关参数
+     * {@link HttpWebSocketHandlerDecoratorFactory}#decorate 这个类中有取出X-ID的操作
      *
      * @param request    请求对象
      * @param response   响应对象
@@ -27,8 +32,11 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor {
      */
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) {
+        logger.info("beforeHandshake");
+
         // 将 request 对象转换为 ServletServerHttpRequest 对象
         ServletServerHttpRequest serverRequest = (ServletServerHttpRequest) request;
+
         // 获取 HTTP Session 对象
         HttpSession session = serverRequest.getServletRequest().getSession();
         if (session != null) {
@@ -41,7 +49,8 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor {
                 return true;
             }
         }
-        // 终止握手
+
+        // 终止握手，没有特别情况不会走到这里
         return false;
     }
 
@@ -55,5 +64,6 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor {
      */
     @Override
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception ex) {
+        logger.info("afterHandshake");
     }
 }

@@ -12,25 +12,27 @@
 <body>
 <div id="main-content" class="container" style="margin-top: 10px;">
     <div class="row">
-        <h5 id="name" class="page-header"></h5>
+        <h2 id="name" class="page-header"></h2>
     </div>
     <div class="row">
-        点对点地址&nbsp;/user/queue<br/>
-        广播地址&nbsp;/topic<br/>
-        广播地址&nbsp;/queue<br/>
-        异常地址&nbsp;/error<br/>
+        <span>点对点地址&nbsp;/queue</span><b>&nbsp;初始化时已订阅</b>&nbsp;&nbsp;推送地址改为<b>/queue</b>&nbsp;&nbsp;目标用户<b>不要为空</b>即可直接测试<br/>
+        <span>广播地址&nbsp;/topic</span><b>&nbsp;初始化时已订阅</b>&nbsp;&nbsp;推送地址改为<b>/topic</b>即可直接测试<br/>
+        <span>广播地址&nbsp;/queue</span><b>&nbsp;初始化时已订阅</b>&nbsp;&nbsp;推送地址改为<b>/queue</b>即可直接测试<br/>
+        <span>异常地址&nbsp;/error</span><b>&nbsp;初始化时已订阅</b>&nbsp;&nbsp;推送地址改为<b>/error</b>即可直接测试<br/>
     </div>
+    <hr/>
     <div class="row">
         <form class="navbar-form">
             <div class="form-group">
                 <label>WebSocket 连接：</label>
-                <button class="btn btn-primary" type="button" onclick="connect()">进行连接</button>
-                <button class="btn btn-danger" type="button" onclick="disconnect()">断开连接</button>
+                <button id="connect_btn" class="btn btn-primary" type="button" onclick="connect()">进行连接</button>
+                <button id="disconnect_btn" class="btn btn-danger" type="button" onclick="disconnect()">断开连接</button>
             </div>
             <div class="form-group">
                 <label for="subscribe">&nbsp;订阅地址：</label>
                 <input type="text" id="subscribe" class="form-control" placeholder="订阅地址">
-                <button class="btn btn-warning" onclick="subscribeMessage()" type="button">订阅</button>
+                <button id="subscribe_btn" class="btn btn-warning" onclick="subscribeMessage()" type="button">订阅</button>
+                <button id="unsubscribe_btn" class="btn btn-danger" onclick="unsubscribeMessage()" type="button">解除订阅</button>
             </div>
         </form>
     </div>
@@ -50,7 +52,7 @@
             </div>
             <div class="form-group">
                 <label for="content">&nbsp;消息内容：</label>
-                <input type="text" id="content" class="form-control" placeholder="消息内容">
+                <input type="text" id="content" class="form-control" placeholder="消息内容(不填也行)">
                 <button class="btn btn-info" onclick="sendMessage()" type="button">发送</button>
             </div>
         </form>

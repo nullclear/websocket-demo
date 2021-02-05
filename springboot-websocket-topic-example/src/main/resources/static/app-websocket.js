@@ -1,8 +1,8 @@
 // 设置 STOMP 客户端
 let stompClient = null;
-// 设置 WebSocket 进入端点
+// 设置 WebSocket 进入端点，仅用于初始化连接
 const SOCKET_ENDPOINT = "/point";
-// 设置服务器端点，访问服务器中哪个接口
+// 设置服务器端点，访问服务器中哪个@MessageMapping接口
 const SEND_ENDPOINT = "/app/test";
 
 // 原来的监听函数

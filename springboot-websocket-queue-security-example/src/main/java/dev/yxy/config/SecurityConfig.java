@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
+ * spring-security需要了解，可以看spring-security-demo
  * Created by Nuclear on 2021/1/6
  */
 @Configuration
@@ -32,12 +33,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("jack").password("123456").roles("ADMIN")
-                .and()
-                .withUser("rose").password("123456").roles("ADMIN")
-                .and()
-                .withUser("tony").password("123456").roles("ADMIN");
+        auth.inMemoryAuthentication().withUser("jack").password("123456").roles("ADMIN")
+                .and().withUser("rose").password("123456").roles("ADMIN")
+                .and().withUser("tony").password("123456").roles("ADMIN");
     }
 
     /**

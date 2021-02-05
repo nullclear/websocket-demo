@@ -17,13 +17,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     /**
      * 配置 WebSocket 进入点，及开启使用 SockJS，这些配置主要用配置连接端点，用于 WebSocket 连接
+     * -----
+     * 仅用于初始化连接
      *
      * @param registry STOMP 端点
      */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/point")
-                .setAllowedOrigins("*")// 设置允许跨域，设置为"*"则为允许全部域名
+                .setAllowedOrigins("*")// 设置允许跨域，设置为"*"则为允许全部域名，CORS？
                 .addInterceptors(new HttpHandshakeInterceptor())// 握手拦截器
                 .setHandshakeHandler(new HttpHandshakeHandler())// 握手处理器
                 .withSockJS();
@@ -41,15 +43,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // 配置客户端发送请求消息的一个或多个前缀，该前缀会筛选消息目标转发到 Controller 类中注解对应的方法里
         registry.setApplicationDestinationPrefixes("/app");
         // 服务端通知特定用户客户端的前缀，可以不设置，默认为/user/
+        // todo 推送到用户并没有单独的通道，依旧是沿用的广播通道，只不过推送时方法不同，订阅时需要加上/user前缀
         registry.setUserDestinationPrefix("/user");
-    }
-
-    /**
-     * 配置通道拦截器
-     */
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new MyChannelInterceptor());//通道拦截器
     }
 
     /**
@@ -58,5 +53,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
         registry.addDecoratorFactory(new HttpWebSocketHandlerDecoratorFactory());//处理器装饰工厂
+    }
+
+    /**
+     * 配置通道拦截器
+     */
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(new MyChannelInterceptor());//通道拦截器
     }
 }
